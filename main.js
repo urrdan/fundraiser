@@ -47,7 +47,7 @@ const dateFormatter = (date) => {
     if (day.length < 2) day = "0" + day;
 
     console.log(d.getHours());
-    return [month, day, year].join("/");
+    return {a: [month, day, year].join("/"), b: date};
   } else return "";
 };
 //GET
@@ -73,8 +73,8 @@ const getContacts = () => {
           tableContent += `<tr>
           <td>${element.name}</td>
           <td>${element.email}</td>
-          <td>${element.phone}</td>
-          <td>${dateFormatter(element.dateCreated)}</td>
+          <td>${dateFormatter(element.dateCreated).b}</td>
+          <td>${dateFormatter(element.dateCreated).a}</td>
           <td class="table-action"  >
           <i class="bi bi-trash" onclick="deleteContact(${element.id})"></i>
           <i class="bi bi-pencil-square" onclick='openEditModal(${JSON.stringify(
