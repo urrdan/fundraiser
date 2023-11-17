@@ -65,7 +65,7 @@ const getContacts = () => {
         <th scope="col">Email</th>
         <th scope="col">Phone</th>
         <th scope="col"> Created</th>
-        <th scope="col"> Actions</th>
+        <th scope="col"> Action</th>
       </tr>
       </thead>`;
       if ((res || []).length) {
