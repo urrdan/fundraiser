@@ -35,7 +35,8 @@ const openEditModal = (data) => {
 
 const dateFormatter = (date) => {
   if (date) {
-    //date = date.split(/[- : T]/)+"Z";
+    date = date.split(/[- : T]/);
+    date = `${date[0]}/${date[1]}/${date[2]} ${date[3]}:${date[4]}Z`;
 
     var d = new Date(date),
       month = "" + (d.getMonth() + 1),
@@ -70,10 +71,10 @@ const getContacts = () => {
       if ((res || []).length) {
         res.reverse().forEach((element) => {
           tableContent += `<tr>
-          <td>${dateFormatter("2023-12-12Z")}</td>
-          <td>${dateFormatter("2023-12-12 12:45Z")}</td>
-          <td>${dateFormatter("2023/12/12z")}</td>
-          <td>${dateFormatter("2023/12/12 12:45z")}</td>
+          <td>${element.name}</td>
+          <td>${element.email}</td>
+          <td>${element.phone}</td>
+          <td>${dateFormatter(element.dateCreated)}</td>
           <td class="table-action"  >
           <i class="bi bi-trash" onclick="deleteContact(${element.id})"></i>
           <i class="bi bi-pencil-square" onclick='openEditModal(${JSON.stringify(
