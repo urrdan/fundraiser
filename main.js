@@ -70,10 +70,10 @@ const getContacts = () => {
       if ((res || []).length) {
         res.reverse().forEach((element) => {
           tableContent += `<tr>
-          <td>${dateFormatter("2023-12-12")}</td>
-          <td>${dateFormatter("2023-12-12 12:45")}</td>
-          <td>${dateFormatter("2023/12/12")}</td>
-          <td>${dateFormatter("2023/12/12 12:45")}</td>
+          <td>${dateFormatter("2023-12-12Z")}</td>
+          <td>${dateFormatter("2023-12-12 12:45Z")}</td>
+          <td>${dateFormatter("2023/12/12z")}</td>
+          <td>${dateFormatter("2023/12/12 12:45z")}</td>
           <td class="table-action"  >
           <i class="bi bi-trash" onclick="deleteContact(${element.id})"></i>
           <i class="bi bi-pencil-square" onclick='openEditModal(${JSON.stringify(
