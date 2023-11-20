@@ -1,6 +1,24 @@
 //const url = `https://localhost:7117/Contact`;
 const url = `https://ery9ct8r48.execute-api.ap-south-1.amazonaws.com/Contact`;
 var modal = new bootstrap.Modal(document.querySelector(".modal"));
+var loader = document.querySelector(".loader");
+var buttonClicked;
+
+const renderer = (callback) => {
+  console.log(buttonClicked);
+  if (!buttonClicked) {
+    buttonClicked = true;
+    loader.style["display"] = "block";
+    callback();
+  } else {
+    console.log("button already clicked");
+  }
+};
+
+const unRenderer = () => {
+  loader.style["display"] = "none";
+  buttonClicked = false;
+};
 
 const toastRendered = (message, error) => {
   console.log(message);
@@ -38,6 +56,7 @@ const dateFormatter = (date) => {
     date = date.split(/[- : T]/);
     date = `${date[0]}/${date[1]}/${date[2]} ${date[3]}:${date[4]}Z`;
 
+    console.log(date);
     var d = new Date(date),
       month = "" + (d.getMonth() + 1),
       day = "" + d.getDate(),
@@ -51,6 +70,10 @@ const dateFormatter = (date) => {
   } else return "";
 };
 //GET
+getContactsOnFirstRender = () => {
+  loader.style["display"] = "block";
+  getContacts();
+};
 
 const getContacts = () => {
   let table = document.getElementById("table");
@@ -88,13 +111,19 @@ const getContacts = () => {
         tableContent = `<div class"no-content-text">No Contacts Yet</div>`;
       }
       table.innerHTML = tableContent;
-    });
+      unRenderer();
+    })
+    .catch(() => unRenderer());
 };
 
 //POST
-
 const onSubmit = (e) => {
   e.preventDefault();
+  renderer(() => onPost(e));
+  return false;
+};
+
+const onPost = (e) => {
   let requestObj = {};
   for (let i = 0; i < 6; i++) {
     let { name, value, tagName } = e.target[i] || {};
@@ -103,7 +132,7 @@ const onSubmit = (e) => {
     }
   }
   console.log(e.target.id);
-
+  let success;
   fetch(url, {
     method: "POST",
     headers: {
@@ -128,16 +157,20 @@ const onSubmit = (e) => {
     })
     .catch((err) => {
       console.log(err);
+      unRenderer();
       toastRendered("Something Went wrong", true);
     });
-
-  return false;
 };
 
 //EDIT
 
-const onEditContact = (e) => {
+const editContact = (e) => {
   e.preventDefault();
+  renderer(() => onEdit(e));
+  return false;
+};
+
+const onEdit = (e) => {
   let requestObj = {};
   for (let i = 0; i < 6; i++) {
     let { name, value, tagName } = e.target[i] || {};
@@ -174,14 +207,16 @@ const onEditContact = (e) => {
     .catch((err) => {
       console.log(err);
       toastRendered("Something Went wrong", true);
+      unRenderer();
     });
-
-  return false;
 };
 
 //DELETE
 
 const deleteContact = (id) => {
+  renderer(() => onDelete(id));
+};
+const onDelete = (id) => {
   let success;
   fetch(`${url}/${id}`, {
     method: "DELETE",
@@ -203,5 +238,8 @@ const deleteContact = (id) => {
         ? toastRendered(res)
         : toastRendered(res?.title || "Something Went wrong", true);
     })
-    .catch((err) => toastRendered("Something Went wrong", true));
+    .catch(() => {
+      toastRendered("Something Went wrong", true);
+      unRenderer();
+    });
 };
