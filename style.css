@@ -79,6 +79,10 @@ footer {
     transform: rotate(0deg);
   }
 
+  50% {
+    transform: rotate(100deg);
+  }
+
   100% {
     transform: rotate(360deg);
   }
